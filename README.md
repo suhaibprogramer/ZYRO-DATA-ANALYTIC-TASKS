@@ -1,39 +1,88 @@
-## Week 5 — Advanced Business Intelligence & Decision Analytics
+# Ride Analytics & Revenue Intelligence Platform
+**ZYROO Data Analytics Internship — Final Project**
+**Author:** Muhammad Suhaib
 
-Upgrades the Week 4 dashboard into an advanced analytical and decision-support layer. Full write-up: [`reports/week-05-advanced-bi/ZYROO_Week5_Advanced_Analytics_Report.docx`](reports/week-05-advanced-bi/ZYROO_Week5_Advanced_Analytics_Report.docx). Companion workbook with every formula-driven table: [`reports/week-05-advanced-bi/ZYROO_Week5_Advanced_Analytics.xlsx`](reports/week-05-advanced-bi/ZYROO_Week5_Advanced_Analytics.xlsx).
+## Overview
 
-### Data model
-One fact table (`rides`, 120 rows, Aug 2026) joined to a dedicated Date Table on `Date`. Three calculated columns support the analysis: `Weekday`, `Route` (Pickup → Drop-off), and `Fare Tier` (Low/Mid/High, split at the 33rd/67th percentile of completed fares). Source data, calculated columns, and measures are kept in separate tables/tabs.
+An end-to-end Business Intelligence project analyzing a ride-hailing operation: from raw trip data to a validated, interactive Power BI dashboard, advanced segment and cancellation-driver analysis, scenario modeling, and business recommendations.
 
-### Major measures (DAX)
-`Total Revenue`, `Completed Rides`, `Cancelled Rides`, `Completion Rate`, `Cancellation Rate`, `Average Fare`, `Average Rating`, `Revenue per Completed Ride`, week-over-week revenue change/% change, and location revenue rank/contribution-%. Full DAX library in the workbook's `DAX Measures` tab and in [`python/week5_advanced_analysis.py`](python/week5_advanced_analysis.py) / [`sql/week5_advanced_queries.sql`](sql/week5_advanced_queries.sql), used to validate every measure before it went into Power BI.
+## Project Progress
 
-### Advanced Power BI features
-Drill-through by pickup location, cancellation-rate conditional formatting (red >25%, amber 15–25%, green <15%), a dynamic page title, and revenue/cancellation-view bookmarks on a new "Advanced Analytics" page.
+| Week | Focus |
+|---|---|
+| Week 2 | Ride demand analysis (date, weekday, location) and customer behavior |
+| Week 3 | Revenue analysis and driver performance KPIs |
+| Week 4 | Interactive Power BI dashboard (KPIs, charts, filters) |
+| Week 5 | Advanced DAX, segmentation, and scenario analysis |
+| Week 6 (Final) | Full audit, validation, and presentation-ready final product |
 
-### Key insights
-- Cancellation runs at 20.0% overall; **Saturday cancels at 39.1%**, roughly double the weekly average.
-- **Johar Town** is the top revenue location (17.3% of revenue) but also runs an above-average 19.0% cancellation rate.
-- **Card payments** are both the largest revenue channel (40.4%) and the most reliable (15.6% cancellation); Wallet is the opposite (26.7% of revenue, 24.2% cancellation).
-- The top fare tier (33% of completed rides) generates **49.9% of total revenue**.
-- Full list of 10 evidence-based insights and 8 recommendations (5 dataset-supported, 3 needing more data) in the report, Sections 13–14.
+## Dataset
 
-### Limitations
-- No `Driver ID` → driver performance intelligence cannot be built.
-- No `Customer ID` → true ride-frequency customer segmentation cannot be built (a fare-tier proxy is used instead, see report Section 7).
-- No distance or ride-type column → `Average Distance` and ride-type breakdowns are not available.
-- Date only, no timestamp → cancellation/demand analyzed by weekday, not by hour.
-- Single calendar month → trend is week-over-week, not month-over-month.
-- No cost data → all figures are revenue, not profit/margin.
+`cleaned_rides.csv` — 120 rides, August 1–30, 2026. Columns: Ride ID, Date, Pickup Location, Drop-off Location, Fare, Payment Method, Ride Status, Rating.
 
-Full detail: report Section 15.
+> Note: this dataset does not include Driver ID, Customer ID, Ride Type, hourly timestamp, or Distance — see **Limitations** in the Week 6 report for what that means for scope.
 
-### Recommendations
-1. Prioritize Saturday operations — it accounts for 9 of the month's 24 cancellations.
-2. Protect Johar Town specifically — highest revenue share and above-average cancellation.
-3. Use Gulberg (lowest cancellation, 6.7%) as an internal operational benchmark.
-4. Investigate the Wallet payment flow — highest cancellation rate of the three methods.
-5. Track the "High" fare tier separately in reporting — half of revenue from a third of rides.
-6. *(Needs more data)* Driver-level actions — requires adding a `Driver ID` field first.
-7. *(Needs more data)* Customer retention programs — requires adding a `Customer ID` field first.
-8. *(Needs validation)* The ~11.3% estimated revenue uplift in the scenario analysis should be piloted before committing budget.
+## Key Metrics
+
+| KPI | Value |
+|---|---|
+| Total Rides | 120 |
+| Completed Rides | 96 |
+| Cancelled Rides | 24 |
+| Total Revenue | Rs 65,427 |
+| Average Fare | Rs 681.53 |
+| Completion Rate | 80% |
+| Cancellation Rate | 20% |
+| Average Rating | 3.96 / 5 |
+
+## Dashboard Features
+
+- **Executive KPI row:** Total Rides, Completed, Cancelled, Total Revenue, Average Fare, Completion Rate
+- **Demand page:** Rides by date (trend), rides by weekday, top pickup/drop-off locations
+- **Revenue page:** Revenue by payment method, revenue by pickup location
+- **Operations page:** Cancellation rate by weekday and by location (the project's key finding)
+- **Filters:** Date, Ride Status, Pickup Location, Payment Method
+
+## Headline Finding
+
+Cancellations track demand rather than occurring at random: the cancellation rate rises from 0% on the quietest day (Thursday) to 39.1% on the busiest day (Saturday), pointing to a weekend driver-supply shortfall rather than a general reliability issue.
+
+## Business Insights
+
+1. Weekends (Sat+Sun) drive 38% of all ride volume
+2. Cancellation rate scales directly with demand — 0% (Thursday) to 39.1% (Saturday)
+3. Cancellation rates vary sharply by zone: Gulberg 6.7% vs. Lahore 30.0%
+4. Three pickup zones (Johar Town, Model Town, Wapda Town) generate 48% of total revenue
+5. Card leads in total revenue through ride volume, not higher per-ride fares
+6. Halving the cancellation rate is estimated to recover ~Rs 8,178/month
+7. Wallet-paid rides rate slightly lower (3.88) than Cash-paid rides (4.00)
+
+## Recommendations
+
+1. Increase weekend driver availability
+2. Treat weekend cancellations as the top operational priority
+3. Audit driver supply/service quality in Lahore and Model Town
+4. Study and replicate Gulberg's low-cancellation performance
+5. Protect driver supply in the top 3 revenue-generating zones
+6. Pilot a ~10% weekend peak-pricing surcharge, tested carefully
+7. Investigate the rating gap on Wallet-paid rides
+8. Add Driver ID and Customer ID to future data collection
+
+*(Full detail, scenario analysis, and evidence for each recommendation is in the Week 5 and Week 6 reports.)*
+
+## Tech Stack
+
+- Power BI Desktop (dashboard, DAX measures)
+- Python (pandas) — independent KPI validation and advanced analysis
+- GitHub — version control and submission
+
+## How to Reproduce
+
+1. Clone this repository
+2. Install dependencies: `pip install pandas`
+3. Open the Power BI dashboard file in Power BI Desktop
+4. Run the validation script to reproduce the independent KPI check
+
+## Project Status
+
+**Complete.** This project (Weeks 2–6) is finished and submitted. The internship continues with a new project for the remaining weeks.
